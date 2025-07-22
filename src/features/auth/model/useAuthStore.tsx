@@ -1,3 +1,4 @@
+import React from 'react'
 import { create } from 'zustand'
 import { registerUserWithEmailAndPassword } from '../api/authApi'
 import type { UserParams } from '../types'
@@ -8,7 +9,8 @@ interface IInitialState {
 }
 
 interface AuthActions {
-	register: (params: UserParams) => Promise<void>
+	registerUserWithEmail: (params: UserParams) => Promise<void>
+	setUser: (user: any) => void
 }
 
 const initialState: IInitialState = {
@@ -18,7 +20,10 @@ const initialState: IInitialState = {
 
 const useAuthStore = create<IInitialState & AuthActions>(set => ({
 	...initialState,
-	register: async ({ email, password, username }: UserParams) => {
+	setUser: user => {
+		set({ user, status: 'success' })
+	},
+	registerUserWithEmail: async ({ email, password, username }: UserParams) => {
 		set({ status: 'loading' })
 		try {
 			const user = await registerUserWithEmailAndPassword({
