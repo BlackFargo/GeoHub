@@ -8,6 +8,7 @@ import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	signInWithPopup,
+	signOut,
 } from 'firebase/auth'
 import {
 	arrayUnion,
@@ -17,7 +18,30 @@ import {
 	updateDoc,
 } from 'firebase/firestore'
 import type { UserParams } from '../types'
-import { signOut } from 'firebase/auth'
+
+const logAuthEvent = async (
+	uid: string,
+	event: 'created' | 'login' | 'logout'
+) => {
+	const now = new Date()
+
+	await updateDoc(doc(db, 'users', uid), {
+		authLogs: arrayUnion({
+			timestamp: Date.now(), // в миллисекундах
+			year: now.getFullYear(),
+			month: String(now.getMonth() + 1).padStart(2, '0'),
+			day: String(now.getDate()).padStart(2, '0'),
+			weekday: now.toLocaleDateString('uk-UA', { weekday: 'long' }),
+			time: now.toLocaleTimeString('uk-UA', {
+				hour: '2-digit',
+				minute: '2-digit',
+				hour12: false,
+			}),
+			event,
+		}),
+	})
+}
+
 export const registerUserWithEmailAndPassword = async ({
 	email,
 	password,
@@ -35,13 +59,9 @@ export const registerUserWithEmailAndPassword = async ({
 			role: 'user',
 			emailVerified: user.emailVerified,
 			createdAt: serverTimestamp(),
-			authLogs: [
-				{
-					timestamp: serverTimestamp(),
-					event: 'created',
-				},
-			],
 		})
+
+		await logAuthEvent(user.uid, 'created')
 
 		return user
 	} catch (e) {
@@ -59,13 +79,11 @@ export const registerUserWithGoogle = async () => {
 			role: 'user',
 			emailVerified: user.emailVerified,
 			createdAt: serverTimestamp(),
-			authLogs: [
-				{
-					timestamp: serverTimestamp(),
-					event: 'created',
-				},
-			],
 		})
+
+		await logAuthEvent(user.uid, 'created')
+
+		return user
 	} catch (e) {
 		throw e
 	}
@@ -83,12 +101,9 @@ export const loginUserWithEmailAndPassword = async ({
 		)
 		const user = userCredential.user
 
-		await updateDoc(doc(db, 'users', user?.uid), {
-			authLogs: arrayUnion({
-				timestamp: serverTimestamp(),
-				event: 'login',
-			}),
-		})
+		await logAuthEvent(user.uid, 'login')
+
+		return user
 	} catch (e) {
 		throw e
 	}
@@ -100,25 +115,28 @@ export const signOutUser = async () => {
 		if (!user) {
 			throw new Error('No user is currently signed in')
 		}
-		const uid = user.uid
-		await updateDoc(doc(db, 'users', uid), {
-			authLogs: arrayUnion({
-				timestamp: serverTimestamp(),
-				event: 'logout',
-			}),
-		})
-		const status = await signOut(auth)
-		return status
+
+		await logAuthEvent(user.uid, 'logout')
+
+		await signOut(auth)
 	} catch (e) {
 		throw e
 	}
 }
 
-export const loginWithGithub = async () => {
+export const registerUserWithGithub = async () => {
 	try {
 		const userCredential = await signInWithPopup(auth, gitHubProvider)
-
 		const user = userCredential.user
+
+		await setDoc(doc(db, 'users', user.uid), {
+			email: user.email,
+			role: 'user',
+			emailVerified: user.emailVerified,
+			createdAt: serverTimestamp(),
+		})
+
+		await logAuthEvent(user.uid, 'created')
 
 		return user
 	} catch (e) {

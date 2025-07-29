@@ -7,7 +7,14 @@ import googleIcon from '../../../../shared/assets/icons/google.png'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import useAuthStore from '../../model/useAuthStore'
-import AuthToggle from './qwe'
+
+import {
+	registerUserWithGithub,
+	registerUserWithGoogle,
+} from '../../api/authApi'
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from '@/firebase/firebaseConfig'
+import { useRouter } from 'next/navigation'
 
 const schema = z.object({
 	email: z
@@ -18,17 +25,16 @@ const schema = z.object({
 })
 type FormData = z.infer<typeof schema>
 export function AuthForm() {
-	const { registerUserWithEmail, status } = useAuthStore()
-
+	const { registerUserWithEmail, status, user } = useAuthStore()
 	const {
 		register,
 		formState: { errors },
 		handleSubmit,
 	} = useForm<FormData>({ resolver: zodResolver(schema) })
 	const [authType, setAuthType] = useState(true)
-
+	const router = useRouter()
 	const onSubmit = async (data: FormData) => {
-		const response = await registerUserWithEmail({
+		await registerUserWithEmail({
 			email: data.email,
 			password: data.password,
 		})
@@ -57,7 +63,7 @@ export function AuthForm() {
 				helperText={errors.email?.message}
 				fullWidth
 			/>
-			<AuthToggle />
+
 			<TextField
 				label='Пароль'
 				variant='outlined'
@@ -72,8 +78,8 @@ export function AuthForm() {
 				Увійти
 			</Button>
 			<p>
-				By signing in you accept the Terms of Use and acknowledge the Privacy
-				Statement and Cookie Policy.
+				Входячи в систему, ви приймаєте умови використання та ознайомлюєтеся з
+				положенням про конфіденційність і політикою щодо файлів cookie.
 			</p>
 
 			{status !== null && typeof status === 'object' && 'error' in status && (
@@ -81,6 +87,7 @@ export function AuthForm() {
 			)}
 			<hr />
 			<Button
+				onClick={registerUserWithGoogle}
 				variant='outlined'
 				sx={{
 					textTransform: 'none',
@@ -116,6 +123,7 @@ export function AuthForm() {
 				Google
 			</Button>
 			<Button
+				onClick={registerUserWithGithub}
 				variant='outlined'
 				sx={{
 					textTransform: 'none',
@@ -137,9 +145,9 @@ export function AuthForm() {
 					<g
 						id='Page-1'
 						stroke='none'
-						stroke-width='1'
+						strokeWidth='1'
 						fill='none'
-						fill-rule='evenodd'
+						fillRule='evenodd'
 					>
 						<g
 							id='Dribbble-Light-Preview'

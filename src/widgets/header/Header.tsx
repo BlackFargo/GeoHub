@@ -1,3 +1,4 @@
+'use client'
 import { AppBar, Toolbar, Typography, Button } from '@mui/material'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
@@ -8,19 +9,30 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import Badge from '@mui/material/Badge'
 import SearchIcon from '@mui/icons-material/Search'
+import Link from 'next/link'
 
 export function Header() {
 	return (
 		<AppBar position='fixed'>
 			<Toolbar>
-				<Typography variant='h4' component='h1' sx={{ flexGrow: 1 }}>
+				<Typography
+					variant='h4'
+					component={Link}
+					sx={{ flexGrow: 1 }}
+					href={'/'}
+				>
 					GeoHub
 				</Typography>
 				<IconButton color='inherit'>
 					<Brightness4Icon />
 				</IconButton>
 
-				<Button color='inherit' startIcon={<AccountCircle />}>
+				<Button
+					color='inherit'
+					startIcon={<AccountCircle />}
+					component={Link}
+					href='/auth'
+				>
 					Увійти
 				</Button>
 
