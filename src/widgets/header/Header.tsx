@@ -11,7 +11,7 @@ import Badge from '@mui/material/Badge'
 import SearchIcon from '@mui/icons-material/Search'
 import Link from 'next/link'
 
-export function Header() {
+export function Header({ toggleTheme, currentMode }) {
 	return (
 		<AppBar position='fixed'>
 			<Toolbar>
@@ -23,7 +23,11 @@ export function Header() {
 				>
 					GeoHub
 				</Typography>
-				<IconButton color='inherit'>
+				<IconButton
+					color='inherit'
+					onClick={toggleTheme}
+					aria-label='Переключить тему'
+				>
 					<Brightness4Icon />
 				</IconButton>
 

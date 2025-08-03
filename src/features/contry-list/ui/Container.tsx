@@ -2,33 +2,40 @@
 import { useCountryList } from '../model/useCountryList'
 import { CountrySearch } from './CountrySearch'
 import { SelectCountryList } from './SelectContryList'
-
+import { getCountries } from '../api/contryAPI'
 import { useEffect, useState } from 'react'
 import { Typography } from '@mui/material'
 import useDebounce from '@/shared/hooks/useDebounce'
+import { useQuery } from '@tanstack/react-query'
 
 export default function Container() {
-	const { searchCountry, countries, setCountries } = useCountryList()
-	const [value, setValue] = useState('')
+	// const { searchCountry, countries, setCountries } = useCountryList()
+	const { data, isLoading, isError } = useQuery({
+		queryKey: ['contries'],
+		queryFn: async () => getCountries(),
+	})
 
-	const setValueHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
-		setValue(e.target.value)
+	console.log(data)
+	// const [value, setValue] = useState('')
 
-	const { debouncedValue } = useDebounce(value, 300)
-	useEffect(() => {
-		setCountries()
-	}, [])
+	// const setValueHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
+	// 	setValue(e.target.value)
 
-	useEffect(() => {
-		searchCountry(debouncedValue)
-	}, [debouncedValue])
+	// const { debouncedValue } = useDebounce(value, 300)
+	// useEffect(() => {
+	// 	setCountries()
+	// }, [])
+
+	// useEffect(() => {
+	// 	searchCountry(debouncedValue)
+	// }, [debouncedValue])
 	return (
 		<section>
 			<Typography variant='h4' component={'h1'} sx={{ marginBottom: '20px' }}>
 				Пошук інформації про країни
 			</Typography>
-			<CountrySearch searchCountry={setValueHandler} />
-			<SelectCountryList countries={countries} />
+			{/* <CountrySearch searchCountry={setValueHandler} /> */}
+			<SelectCountryList countries={data} />
 		</section>
 	)
 }

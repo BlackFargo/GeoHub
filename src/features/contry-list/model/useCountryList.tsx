@@ -22,11 +22,12 @@ interface CountryActions {
 export const useCountryList = create<IInitialState & CountryActions>(
 	(set, get) => ({
 		...initialState,
-		setCountries: async () => {
+		setCountries: async country => {
 			set({ status: 'loading' })
 			try {
-				const res = await getCountries()
+				const res = await getCountries(country)
 				set({ countries: res, status: 'success' })
+				console.log(res)
 			} catch (error: unknown) {
 				if (error instanceof Error) {
 					set({ status: { error: error.message } })
@@ -34,13 +35,7 @@ export const useCountryList = create<IInitialState & CountryActions>(
 			}
 		},
 		searchCountry: value => {
-			const currentCountries = get().countries
-
-			const filter = currentCountries?.filter(country =>
-				country.name.common.toLowerCase().includes(value.toLowerCase())
-			)
-			console.log(filter)
-			set({ test: filter })
+			get().setCountries(value)
 		},
 	})
 )
