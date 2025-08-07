@@ -1,41 +1,40 @@
 'use client'
-import { useCountryList } from '../model/useCountryList'
+
 import { CountrySearch } from './CountrySearch'
 import { SelectCountryList } from './SelectContryList'
-import { getCountries } from '../api/contryAPI'
+
 import { useEffect, useState } from 'react'
 import { Typography } from '@mui/material'
 import useDebounce from '@/shared/hooks/useDebounce'
-import { useQuery } from '@tanstack/react-query'
+
+import { useCountries } from '../model/useCountries'
+import { RegionFilter } from './RegionFilter'
+
+import { getCountriesWithRegion } from '../api/contryAPI'
+import { useCountryList } from '../model/useCountryList'
+import { useFilterCountries } from '../model/useFilterCountries'
 
 export default function Container() {
-	// const { searchCountry, countries, setCountries } = useCountryList()
-	const { data, isLoading, isError } = useQuery({
-		queryKey: ['contries'],
-		queryFn: async () => getCountries(),
-	})
+	const { setCountry, countries, originalCountries } = useCountryList()
 
-	console.log(data)
-	// const [value, setValue] = useState('')
+	const [value, setValue] = useState('')
 
+	const setValueHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
+		setCountry(e.target.value)
 	// const setValueHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
 	// 	setValue(e.target.value)
+	const { debouncedValue } = useDebounce(value, 300)
 
-	// const { debouncedValue } = useDebounce(value, 300)
-	// useEffect(() => {
-	// 	setCountries()
-	// }, [])
+	const { status } = useCountries(debouncedValue)
 
-	// useEffect(() => {
-	// 	searchCountry(debouncedValue)
-	// }, [debouncedValue])
 	return (
 		<section>
 			<Typography variant='h4' component={'h1'} sx={{ marginBottom: '20px' }}>
 				Пошук інформації про країни
 			</Typography>
-			{/* <CountrySearch searchCountry={setValueHandler} /> */}
-			<SelectCountryList countries={data} />
+			<CountrySearch searchCountry={setValueHandler} />
+			<RegionFilter />
+			<SelectCountryList countries={countries?.length && countries} />
 		</section>
 	)
 }

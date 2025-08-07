@@ -1,14 +1,15 @@
 'use client'
 import { List, ListItem, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid'
-
-import { useEffect, useState } from 'react'
-import { useCountryList } from '../model/useCountryList'
+import Image from 'next/image'
+import resNotFound from '@/shared/assets/images/resultNotFound.png'
+import { Box } from '@mui/material'
+import NotFoundBlock from './NotFoundBlock'
 
 export function SelectCountryList({ countries }) {
 	return (
 		<Grid container spacing={2} component={'ul'} sx={{ marginTop: '20px' }}>
-			{countries &&
+			{countries?.length ? (
 				countries.map(contry => (
 					<Grid
 						key={contry.name.official}
@@ -26,7 +27,7 @@ export function SelectCountryList({ countries }) {
 							<ListItem sx={{ padding: '0' }}>
 								<Typography variant='h4'>
 									{' '}
-									Страна: {contry.name.common}
+									Країна: {contry.name.common}
 								</Typography>
 							</ListItem>
 							<ListItem sx={{ padding: '0' }}>
@@ -64,7 +65,10 @@ export function SelectCountryList({ countries }) {
 							</ListItem>
 						</List>
 					</Grid>
-				))}
+				))
+			) : (
+				<NotFoundBlock />
+			)}
 		</Grid>
 	)
 }
