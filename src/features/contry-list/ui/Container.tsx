@@ -3,29 +3,86 @@
 import { CountrySearch } from './CountrySearch'
 import { SelectCountryList } from './SelectContryList'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Typography } from '@mui/material'
 import useDebounce from '@/shared/hooks/useDebounce'
 
-import { useCountries } from '../model/useCountries'
 import { RegionFilter } from './RegionFilter'
 
-import { getCountriesWithRegion } from '../api/contryAPI'
+import { getCountries } from '../api/contryAPI'
 import { useCountryList } from '../model/useCountryList'
-import { useFilterCountries } from '../model/useFilterCountries'
+
+import { PopulationFilter } from './PopulationFilter'
+import { useQuery } from '@tanstack/react-query'
+
+const regions = [
+	{ id: 'region-1', name: 'Europe' },
+	{ id: 'region-2', name: 'Asia' },
+	{ id: 'region-3', name: 'Africa' },
+	{ id: 'region-4', name: 'Americas' },
+	{ id: 'region-5', name: 'Antarctic' },
+	{ id: 'region-6', name: 'Oceania' },
+] as const
+
+export interface ISelectedRegion {
+	id: string
+	name: string
+}
 
 export default function Container() {
-	const { setCountry, countries, originalCountries } = useCountryList()
+	const {
+		countries,
+		setQuery,
+		setCountries,
+		setPopulation,
+		setRegions,
+		applyFilters,
+	} = useCountryList()
 
 	const [value, setValue] = useState('')
+	const [populationValues, setPopulationValues] = useState({
+		from: 0,
+		to: 10000000,
+	})
+	const [selectedRegion, setSelectedRegion] = useState<ISelectedRegion[]>([
+		...regions,
+	])
 
-	const setValueHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
-		setCountry(e.target.value)
-	// const setValueHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
-	// 	setValue(e.target.value)
+	const { data, error } = useQuery({
+		queryKey: ['countries'],
+		queryFn: getCountries,
+	})
+
+	useEffect(() => {
+		setCountries(data)
+	}, [data])
+
+	const setValueHandler = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			setValue(e.target.value)
+		},
+		[]
+	)
+
 	const { debouncedValue } = useDebounce(value, 300)
 
-	const { status } = useCountries(debouncedValue)
+	const handleChange = (regionName: ISelectedRegion) => {
+		setSelectedRegion(prev =>
+			prev.some(item => item.name === regionName.name)
+				? prev.filter(item => item.name !== regionName.name)
+				: [...prev, regionName]
+		)
+	}
+
+	useEffect(() => {
+		setQuery(debouncedValue)
+	}, [debouncedValue])
+
+	useEffect(() => {
+		setPopulation(populationValues.from, populationValues.to)
+		setRegions(selectedRegion)
+		applyFilters()
+	}, [value, populationValues, selectedRegion])
 
 	return (
 		<section>
@@ -33,8 +90,12 @@ export default function Container() {
 				Пошук інформації про країни
 			</Typography>
 			<CountrySearch searchCountry={setValueHandler} />
-			<RegionFilter />
-			<SelectCountryList countries={countries?.length && countries} />
+			<RegionFilter
+				selectedRegion={selectedRegion}
+				handleChange={handleChange}
+			/>
+			<PopulationFilter setPopulation={setPopulationValues} />
+			<SelectCountryList countries={countries} />
 		</section>
 	)
 }

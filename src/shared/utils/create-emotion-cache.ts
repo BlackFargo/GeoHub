@@ -1,6 +1,3 @@
-'use client'
 import createCache from '@emotion/cache'
 
-export const createEmotionCache = () => {
-	return createCache({ key: 'css', prepend: true })
-}
+export const clientSideEmotionCache = createCache({ key: 'css', prepend: true })

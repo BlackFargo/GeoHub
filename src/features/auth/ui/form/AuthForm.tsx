@@ -3,8 +3,7 @@ import { Box, Button, TextField, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import googleIcon from '../../../../shared/assets/icons/google.png'
-import Image from 'next/image'
+
 import { useEffect, useState } from 'react'
 import useAuthStore from '../../model/useAuthStore'
 
@@ -12,8 +11,7 @@ import {
 	registerUserWithGithub,
 	registerUserWithGoogle,
 } from '../../api/authApi'
-import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from '@/firebase/firebaseConfig'
+
 import { useRouter } from 'next/navigation'
 
 const schema = z.object({
@@ -25,19 +23,31 @@ const schema = z.object({
 })
 type FormData = z.infer<typeof schema>
 export function AuthForm() {
-	const { registerUserWithEmail, status, user } = useAuthStore()
+	const {
+		registerUserWithEmail,
+		loginUserWithEmailAndPassword,
+		status,
+		error,
+	} = useAuthStore()
 	const {
 		register,
 		formState: { errors },
 		handleSubmit,
 	} = useForm<FormData>({ resolver: zodResolver(schema) })
-	const [authType, setAuthType] = useState(true)
+	const [authType, setAuthType] = useState<string>('')
 	const router = useRouter()
 	const onSubmit = async (data: FormData) => {
-		await registerUserWithEmail({
-			email: data.email,
-			password: data.password,
-		})
+		if (authType === 'login') {
+			await loginUserWithEmailAndPassword({
+				email: data.email,
+				password: data.password,
+			})
+		} else if (authType === 'register') {
+			await registerUserWithEmail({
+				email: data.email,
+				password: data.password,
+			})
+		}
 	}
 
 	return (
@@ -73,10 +83,24 @@ export function AuthForm() {
 				helperText={errors.password?.message}
 				fullWidth
 			/>
-			{/* {status && <p>{status}</p>} */}
-			<Button variant='outlined' type='submit'>
+			<Typography variant='body1' component={'p'} sx={{ color: 'red' }}>
+				{error ? error : ''}
+			</Typography>
+			<Button
+				variant='outlined'
+				type='submit'
+				onClick={() => setAuthType('register')}
+			>
+				Зареєструватися
+			</Button>
+			<Button
+				variant='outlined'
+				type='submit'
+				onClick={() => setAuthType('login')}
+			>
 				Увійти
 			</Button>
+
 			<p>
 				Входячи в систему, ви приймаєте умови використання та ознайомлюєтеся з
 				положенням про конфіденційність і політикою щодо файлів cookie.

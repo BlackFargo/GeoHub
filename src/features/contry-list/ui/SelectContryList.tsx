@@ -1,74 +1,94 @@
 'use client'
-import { List, ListItem, Typography } from '@mui/material'
-import Grid from '@mui/material/Grid'
-import Image from 'next/image'
-import resNotFound from '@/shared/assets/images/resultNotFound.png'
-import { Box } from '@mui/material'
-import NotFoundBlock from './NotFoundBlock'
 
-export function SelectCountryList({ countries }) {
+import React from 'react'
+import { VirtuosoGrid } from 'react-virtuoso'
+import { Box, Typography, List, ListItem } from '@mui/material'
+import NotFoundBlock from './NotFoundBlock'
+import { Country } from '../types'
+
+export function SelectCountryList({
+	countries,
+}: {
+	countries: Country[] | null
+}) {
+	if (!countries?.length) return <NotFoundBlock />
+
 	return (
-		<Grid container spacing={2} component={'ul'} sx={{ marginTop: '20px' }}>
-			{countries?.length ? (
-				countries.map(contry => (
-					<Grid
-						key={contry.name.official}
-						size={{ xs: 12, md: 6, lg: 4 }}
-						component={'li'}
-						sx={{
-							padding: '10px',
-							border: '2px solid gray',
-							display: 'flex',
-							flexDirection: 'column',
-						}}
-					>
-						<img src={contry?.flags.png} width={200} height={200} />
-						<List sx={{ padding: '0' }}>
-							<ListItem sx={{ padding: '0' }}>
-								<Typography variant='h4'>
-									{' '}
-									Країна: {contry.name.common}
-								</Typography>
-							</ListItem>
-							<ListItem sx={{ padding: '0' }}>
-								<Typography variant='h6' component={'p'}>
-									Регіон: {contry.region}
-								</Typography>
-							</ListItem>
-							<ListItem sx={{ padding: '0' }}>
-								<Typography variant='body1' component={'p'}>
-									Популяція: {contry.population}
-								</Typography>
-							</ListItem>
-							<ListItem sx={{ padding: '0' }}>
-								<Typography variant='body1' component={'p'}>
-									Столиця: {contry.capital}
-								</Typography>
-							</ListItem>
-							<ListItem sx={{ padding: '0' }}>
-								<Typography variant='body1' component={'p'}>
-									Мови:{' '}
-									{Object.values(contry.languages)
-										.map(language => language)
-										.join(', ')}
-								</Typography>
-							</ListItem>
-							<ListItem sx={{ padding: '0' }}>
-								<Typography variant='body1' component={'p'}>
-									{/* Валюта: {Object.values(contry.currencies)[0].name} */}
-								</Typography>
-							</ListItem>
-							<ListItem sx={{ padding: '0' }}>
-								<Typography variant='body1' component={'p'}>
-									Область: {contry.area}км²
-								</Typography>
-							</ListItem>
-						</List>
-					</Grid>
-				))
-			) : (
-				<NotFoundBlock />
-			)}
-		</Grid>
+		<Box sx={{ height: '80vh', width: '100%', marginTop: '20px' }}>
+			<VirtuosoGrid
+				style={{ height: '100%', width: '100%' }}
+				totalCount={countries.length}
+				components={{
+					Item: ({ children, ...props }) => (
+						<Box
+							{...props}
+							sx={{
+								border: '2px solid gray',
+								padding: 1,
+								display: 'flex',
+								flexDirection: 'column',
+								borderRadius: 2,
+							}}
+						>
+							{children}
+						</Box>
+					),
+					List: React.forwardRef(({ style, children }, ref) => (
+						<Box
+							ref={ref}
+							style={style}
+							sx={{
+								display: 'grid',
+								gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+								gap: 2,
+							}}
+						>
+							{children}
+						</Box>
+					)),
+				}}
+				itemContent={index => {
+					const contry = countries[index]
+
+					return (
+						<>
+							<img src={contry.flags.png} width={200} height={200} />
+							<List sx={{ p: 0 }}>
+								<ListItem sx={{ p: 0 }}>
+									<Typography variant='h6'>
+										Країна: {contry.name.common}
+									</Typography>
+								</ListItem>
+								<ListItem sx={{ p: 0 }}>
+									<Typography variant='body2'>
+										Регіон: {contry.region}
+									</Typography>
+								</ListItem>
+								<ListItem sx={{ p: 0 }}>
+									<Typography variant='body2'>
+										Популяція: {contry.population}
+									</Typography>
+								</ListItem>
+								<ListItem sx={{ p: 0 }}>
+									<Typography variant='body2'>
+										Столиця: {contry.capital}
+									</Typography>
+								</ListItem>
+								<ListItem sx={{ p: 0 }}>
+									<Typography variant='body2'>
+										Мови: {Object.values(contry.languages).join(', ')}
+									</Typography>
+								</ListItem>
+								<ListItem sx={{ p: 0 }}>
+									<Typography variant='body2'>
+										Область: {contry.area} км²
+									</Typography>
+								</ListItem>
+							</List>
+						</>
+					)
+				}}
+			/>
+		</Box>
 	)
 }

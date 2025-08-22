@@ -11,7 +11,7 @@ import Badge from '@mui/material/Badge'
 import SearchIcon from '@mui/icons-material/Search'
 import Link from 'next/link'
 
-export function Header({ toggleTheme, currentMode }) {
+export function Header() {
 	return (
 		<AppBar position='fixed'>
 			<Toolbar>
@@ -25,7 +25,7 @@ export function Header({ toggleTheme, currentMode }) {
 				</Typography>
 				<IconButton
 					color='inherit'
-					onClick={toggleTheme}
+					// onClick={toggleTheme}
 					aria-label='Переключить тему'
 				>
 					<Brightness4Icon />

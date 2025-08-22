@@ -1,7 +1,8 @@
 'use client'
 import Checkbox from '@mui/material/Checkbox'
-import { useFilterCountries } from '../model/useFilterCountries'
+
 import { useEffect, useState } from 'react'
+import { ISelectedRegion } from './Container'
 const regions = [
 	{ id: 'region-1', name: 'Europe' },
 	{ id: 'region-2', name: 'Asia' },
@@ -11,33 +12,21 @@ const regions = [
 	{ id: 'region-6', name: 'Oceania' },
 ]
 
-export function RegionFilter() {
-	const [selectedRegion, setSelectedRegion] = useState([
-		'Europe',
-		'Asia',
-		'Africa',
-		'Americas',
-		'Antarctic',
-		'Oceania',
-	])
-	const { data, status } = useFilterCountries(selectedRegion)
-
-	const handleChange = (regionName: string) => {
-		if (selectedRegion.includes(regionName)) {
-			setSelectedRegion(prev => prev.filter(item => item !== regionName))
-		} else {
-			setSelectedRegion([...selectedRegion, regionName])
-		}
-	}
-
+export function RegionFilter({
+	selectedRegion,
+	handleChange,
+}: {
+	selectedRegion: ISelectedRegion[]
+	handleChange: (region: ISelectedRegion) => void
+}) {
 	return (
 		<div>
 			{regions.map(region => (
 				<label htmlFor={region.id} key={region.id}>
 					<Checkbox
 						id={region.id}
-						checked={selectedRegion.includes(region.name) ? true : false}
-						onChange={() => handleChange(region.name)}
+						checked={selectedRegion.some(item => item.name === region.name)}
+						onChange={() => handleChange(region)}
 					/>
 					{region.name}
 				</label>

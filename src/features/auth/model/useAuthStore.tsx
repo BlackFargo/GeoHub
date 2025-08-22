@@ -1,21 +1,27 @@
-import React from 'react'
 import { create } from 'zustand'
-import { registerUserWithEmailAndPassword } from '../api/authApi'
+import {
+	loginUserWithEmailAndPassword,
+	registerUserWithEmailAndPassword,
+} from '../api/authApi'
 import type { UserParams } from '../types'
+type Status = 'idle' | 'loading' | 'success' | 'error'
 
 interface IInitialState {
 	user: any
-	status: 'loading' | 'success' | { error: string } | null
+	status: Status | null
+	error?: string | null
 }
 
 interface AuthActions {
 	registerUserWithEmail: (params: UserParams) => Promise<void>
 	setUser: (user: any) => void
+	loginUserWithEmailAndPassword: (params: UserParams) => Promise<void>
 }
 
 const initialState: IInitialState = {
 	user: null,
 	status: null,
+	error: null,
 }
 
 const useAuthStore = create<IInitialState & AuthActions>(set => ({
@@ -25,6 +31,7 @@ const useAuthStore = create<IInitialState & AuthActions>(set => ({
 	},
 	registerUserWithEmail: async ({ email, password, username }: UserParams) => {
 		set({ status: 'loading' })
+		set({ error: null })
 		try {
 			const user = await registerUserWithEmailAndPassword({
 				email,
@@ -36,7 +43,28 @@ const useAuthStore = create<IInitialState & AuthActions>(set => ({
 		} catch (error: unknown) {
 			const errorMessage =
 				error instanceof Error ? error.message : String(error)
-			set({ status: { error: errorMessage } })
+			set({ status: 'error', error: errorMessage })
+		}
+	},
+	loginUserWithEmailAndPassword: async ({
+		email,
+		password,
+		username,
+	}: UserParams) => {
+		set({ status: 'loading' })
+		set({ error: null })
+		try {
+			const user = await loginUserWithEmailAndPassword({
+				email,
+				password,
+				username,
+			})
+			set({ user, status: 'success' })
+			return
+		} catch (error: unknown) {
+			const errorMessage =
+				error instanceof Error ? error.message : String(error)
+			set({ status: 'error', error: errorMessage })
 		}
 	},
 }))
