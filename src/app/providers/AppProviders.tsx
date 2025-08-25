@@ -1,17 +1,21 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { CacheProvider } from '@emotion/react'
-import { clientSideEmotionCache } from '@/shared/utils/create-emotion-cache'
 
-export default function AppProviders({ children }: React.PropsWithChildren) {
-	const queryClient = new QueryClient()
+export default function ClientProviders({
+	children,
+}: {
+	children: React.ReactNode
+}) {
+	const [queryClient] = useState(() => new QueryClient())
+
 	return (
-		<CacheProvider value={clientSideEmotionCache}>
-			<QueryClientProvider client={queryClient}>
-				{children}
+		<QueryClientProvider client={queryClient}>
+			{children}
+			{typeof window !== 'undefined' && (
 				<ReactQueryDevtools initialIsOpen={false} />
-			</QueryClientProvider>
-		</CacheProvider>
+			)}
+		</QueryClientProvider>
 	)
 }

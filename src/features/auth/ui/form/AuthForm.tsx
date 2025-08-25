@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import useAuthStore from '../../model/useAuthStore'
 
 import {
@@ -12,7 +12,7 @@ import {
 	registerUserWithGoogle,
 } from '../../api/authApi'
 
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 
 const schema = z.object({
 	email: z
@@ -35,7 +35,7 @@ export function AuthForm() {
 		handleSubmit,
 	} = useForm<FormData>({ resolver: zodResolver(schema) })
 	const [authType, setAuthType] = useState<string>('')
-	const router = useRouter()
+	// const router = useRouter()
 	const onSubmit = async (data: FormData) => {
 		if (authType === 'login') {
 			await loginUserWithEmailAndPassword({

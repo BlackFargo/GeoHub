@@ -5,7 +5,7 @@ import { SelectCountryList } from './SelectContryList'
 
 import { useCallback, useEffect, useState } from 'react'
 import { Typography } from '@mui/material'
-import useDebounce from '@/shared/hooks/useDebounce'
+// import useDebounce from '@/shared/hooks/useDebounce'
 
 import { RegionFilter } from './RegionFilter'
 
@@ -14,20 +14,8 @@ import { useCountryList } from '../model/useCountryList'
 
 import { PopulationFilter } from './PopulationFilter'
 import { useQuery } from '@tanstack/react-query'
-
-const regions = [
-	{ id: 'region-1', name: 'Europe' },
-	{ id: 'region-2', name: 'Asia' },
-	{ id: 'region-3', name: 'Africa' },
-	{ id: 'region-4', name: 'Americas' },
-	{ id: 'region-5', name: 'Antarctic' },
-	{ id: 'region-6', name: 'Oceania' },
-] as const
-
-export interface ISelectedRegion {
-	id: string
-	name: string
-}
+import { REGIONS } from '@/entities/country/constants'
+import type { ISelectedRegion } from '@/entities/country/types'
 
 export default function Container() {
 	const {
@@ -45,10 +33,10 @@ export default function Container() {
 		to: 10000000,
 	})
 	const [selectedRegion, setSelectedRegion] = useState<ISelectedRegion[]>([
-		...regions,
+		...REGIONS,
 	])
 
-	const { data, error } = useQuery({
+	const { data } = useQuery({
 		queryKey: ['countries'],
 		queryFn: getCountries,
 	})
@@ -64,7 +52,7 @@ export default function Container() {
 		[]
 	)
 
-	const { debouncedValue } = useDebounce(value, 300)
+	// const { debouncedValue } = useDebounce(value, 300);
 
 	const handleChange = (regionName: ISelectedRegion) => {
 		setSelectedRegion(prev =>
@@ -75,8 +63,8 @@ export default function Container() {
 	}
 
 	useEffect(() => {
-		setQuery(debouncedValue)
-	}, [debouncedValue])
+		setQuery(value)
+	}, [value])
 
 	useEffect(() => {
 		setPopulation(populationValues.from, populationValues.to)

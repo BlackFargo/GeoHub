@@ -1,14 +1,10 @@
 'use client'
 import { AppBar, Toolbar, Typography, Button } from '@mui/material'
 import AccountCircle from '@mui/icons-material/AccountCircle'
-import PersonAddIcon from '@mui/icons-material/PersonAdd'
+
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import IconButton from '@mui/material/IconButton'
-import SettingsIcon from '@mui/icons-material/Settings'
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
-import NotificationsIcon from '@mui/icons-material/Notifications'
-import Badge from '@mui/material/Badge'
-import SearchIcon from '@mui/icons-material/Search'
+
 import Link from 'next/link'
 
 export function Header() {

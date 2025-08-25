@@ -6,7 +6,6 @@ import { Header } from '@/widgets/header/Header'
 import { auth } from '@/firebase/firebaseConfig'
 import useAuthStore from '@/features/auth/model/useAuthStore'
 import AppProviders from './providers/AppProviders'
-import { useState } from 'react'
 
 export default function ClientLayout({
 	children,

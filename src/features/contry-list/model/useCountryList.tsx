@@ -1,6 +1,11 @@
 import { create } from 'zustand'
-
-import { Country } from '../types'
+import {
+	filterByQuery,
+	filterByPopulation,
+	filterByRegions,
+} from '@/entities/country/utils'
+import type { Country } from '@/entities/country/types'
+import { REGIONS } from '@/entities/country/constants'
 
 interface IInitialState {
 	countries: Country[] | null
@@ -16,14 +21,7 @@ const initialState: IInitialState = {
 	originalCountries: null,
 	countries: null,
 	query: 'mol',
-	regions: [
-		{ id: 'region-1', name: 'Europe' },
-		{ id: 'region-2', name: 'Asia' },
-		{ id: 'region-3', name: 'Africa' },
-		{ id: 'region-4', name: 'Americas' },
-		{ id: 'region-5', name: 'Antarctic' },
-		{ id: 'region-6', name: 'Oceania' },
-	],
+	regions: REGIONS,
 	population: { from: 0, to: 100000000000 },
 
 	status: null,
@@ -67,23 +65,15 @@ export const useCountryList = create<IInitialState & CountryActions>(
 			let result = origCountries
 
 			if (query) {
-				result = result?.filter(country =>
-					country.name.common?.toLowerCase().includes(query.toLowerCase())
-				)
+				result = filterByQuery(result, query)
 			}
 
 			if (population?.from >= 0 && population?.to < 100000000000) {
-				result = result.filter(
-					country =>
-						country.population > population.from &&
-						country.population < population.to
-				)
+				result = filterByPopulation(result, population.from, population.to)
 			}
 
 			if (regions?.length) {
-				result = result.filter(country =>
-					regions.some(reg => reg.name === country.region)
-				)
+				result = filterByRegions(result, regions)
 			} else {
 				result = []
 			}

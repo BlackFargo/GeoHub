@@ -4,7 +4,7 @@ export default function useDebounce<T>(value: T, ms: number) {
 	const [debouncedValue, setDebouncedValue] = useState(value)
 
 	useEffect(() => {
-		let timeout = setTimeout(() => {
+		const timeout = setTimeout(() => {
 			setDebouncedValue(value)
 		}, ms)
 		return () => clearTimeout(timeout)
