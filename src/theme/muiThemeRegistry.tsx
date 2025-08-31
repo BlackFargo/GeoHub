@@ -1,8 +1,14 @@
-// /theme/MuiThemeRegistry.tsx
-import { CacheProvider } from '@emotion/react'
+'use client'
+import * as React from 'react'
+import { CacheProvider, EmotionCache } from '@emotion/react'
 import { ThemeProvider, CssBaseline } from '@mui/material'
-import { clientSideEmotionCache } from '@/shared/utils/create-emotion-cache'
+import createCache from '@emotion/cache'
 import theme from './theme'
+
+const clientSideEmotionCache: EmotionCache = createCache({
+	key: 'css',
+	prepend: true,
+})
 
 export default function MuiThemeRegistry({
 	children,

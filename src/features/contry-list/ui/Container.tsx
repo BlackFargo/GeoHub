@@ -16,6 +16,46 @@ import { PopulationFilter } from './PopulationFilter'
 import { useQuery } from '@tanstack/react-query'
 import { REGIONS } from '@/entities/country/constants'
 import type { ISelectedRegion } from '@/entities/country/types'
+import { z } from 'zod'
+import { Container as MuiContainer } from '@mui/material'
+
+const CountrySchema = z.object({
+	area: z.number(),
+	borders: z.array(z.string()).optional(),
+	capital: z.array(z.string()).optional(),
+	currencies: z
+		.record(
+			z.string(),
+			z.object({
+				name: z.string(),
+				symbol: z.string().optional(),
+			})
+		)
+		.optional(),
+	flags: z.object({
+		png: z.string().url(),
+		svg: z.string().url(),
+		alt: z.string().optional(),
+	}),
+	languages: z.record(z.string(), z.string()).optional(),
+	name: z.object({
+		common: z.string(),
+		official: z.string(),
+		nativeName: z
+			.record(
+				z.string(),
+				z.object({
+					official: z.string(),
+					common: z.string(),
+				})
+			)
+			.optional(),
+	}),
+	population: z.number(),
+	region: z.string(),
+	subregion: z.string().optional(),
+})
+const CountriesSchema = z.array(CountrySchema)
 
 export default function Container() {
 	const {
@@ -36,13 +76,26 @@ export default function Container() {
 		...REGIONS,
 	])
 
-	const { data } = useQuery({
+	const { data, isLoading, error } = useQuery({
 		queryKey: ['countries'],
 		queryFn: getCountries,
+		select: rawData => {
+			const parsed = CountriesSchema.safeParse(rawData)
+
+			if (!parsed.success) {
+				console.error('Zod validation error:', parsed.error)
+				return null
+			}
+
+			return parsed.data
+		},
+		staleTime: 1000 * 60 * 60 * 24,
 	})
 
 	useEffect(() => {
-		setCountries(data)
+		if (data) {
+			setCountries(data)
+		}
 	}, [data])
 
 	const setValueHandler = useCallback(
@@ -73,7 +126,7 @@ export default function Container() {
 	}, [value, populationValues, selectedRegion])
 
 	return (
-		<section>
+		<>
 			<Typography variant='h4' component={'h1'} sx={{ marginBottom: '20px' }}>
 				Пошук інформації про країни
 			</Typography>
@@ -84,6 +137,6 @@ export default function Container() {
 			/>
 			<PopulationFilter setPopulation={setPopulationValues} />
 			<SelectCountryList countries={countries} />
-		</section>
+		</>
 	)
 }

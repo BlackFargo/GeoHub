@@ -10,8 +10,7 @@ const eslintConfig = [
 		extends: ['next/core-web-vitals', 'next/typescript', 'prettier'],
 	}),
 	{
-		// игнорируем папки
-		ignores: ['dist', 'node_modules', '.next'],
+		ignores: ['node_modules/**', '.next/**', 'dist/**', 'build/**'],
 		rules: {
 			'@typescript-eslint/no-explicit-any': 'off', // 🚫 отключаем
 			'react-hooks/exhaustive-deps': 'off',

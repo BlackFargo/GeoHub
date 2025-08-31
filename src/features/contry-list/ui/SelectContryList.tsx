@@ -6,6 +6,7 @@ import { Box, Typography, List, ListItem } from '@mui/material'
 import NotFoundBlock from './NotFoundBlock'
 import type { Country } from '@/entities/country/types'
 import Image from 'next/image'
+import Link from 'next/link'
 export function SelectCountryList({
 	countries,
 }: {
@@ -17,7 +18,7 @@ export function SelectCountryList({
 		<VirtuosoGrid
 			style={{ width: '100%' }}
 			totalCount={countries.length}
-			useWindowScroll // вот это ключ
+			useWindowScroll
 			listClassName='grid-list'
 			components={{
 				Item: ({ children, ...props }) => (
@@ -28,6 +29,7 @@ export function SelectCountryList({
 							borderRadius: 2,
 							padding: 1,
 							boxSizing: 'border-box',
+							width: '100%',
 							maxWidth: '300px',
 							height: {
 								xs: 310,
@@ -47,9 +49,11 @@ export function SelectCountryList({
 							sx={{
 								display: 'grid',
 								gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-								'@media (max-width:500px)': {
-									justifyItems: 'center',
-								},
+
+								justifyItems: 'center',
+								// '@media (max-width:550px)': {
+								// 	justifyItems: 'center',
+								// },
 								gap: 2,
 							}}
 						>
@@ -65,11 +69,12 @@ export function SelectCountryList({
 						<Image
 							src={country.flags.png}
 							style={{
-								height: 120, // фиксированная высота
-								objectFit: 'cover', // обрезка
-								display: 'block', // убираем нижний отступ под img
+								objectFit: 'contain',
+								height: '100px',
+								width: '100%',
 							}}
-							loading='lazy'
+							height={100}
+							width={160}
 							alt={country.name.common}
 						/>
 						{/* <Image
@@ -80,7 +85,9 @@ export function SelectCountryList({
 						/> */}
 						<List sx={{ p: 0 }}>
 							<ListItem sx={{ p: 0 }}>
-								<Typography variant='h6'>{country.name.common}</Typography>
+								<Link href={`/country/${country.name.common}`}>
+									<Typography variant='h6'>{country.name.common}</Typography>
+								</Link>
 							</ListItem>
 							<ListItem sx={{ p: 0 }}>
 								<Typography variant='body2'>

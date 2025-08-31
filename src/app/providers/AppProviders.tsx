@@ -3,6 +3,8 @@ import React, { useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
+import MuiThemeRegistry from '@/theme/muiThemeRegistry'
+
 export default function ClientProviders({
 	children,
 }: {
@@ -12,10 +14,9 @@ export default function ClientProviders({
 
 	return (
 		<QueryClientProvider client={queryClient}>
+			{/* <MuiThemeRegistry>{children}</MuiThemeRegistry> */}
 			{children}
-			{typeof window !== 'undefined' && (
-				<ReactQueryDevtools initialIsOpen={false} />
-			)}
+			<ReactQueryDevtools initialIsOpen={false} />
 		</QueryClientProvider>
 	)
 }

@@ -15,7 +15,7 @@ export const getCountries = async (): Promise<Country[]> => {
 				},
 			}
 		)
-		console.log(response.data)
+
 		return response.data
 	} catch (e: unknown) {
 		if (axios.isAxiosError(e)) {

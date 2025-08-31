@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
 import './globals.css'
 import ClientLayout from './ClientLayout'
+import MuiThemeRegistry from '@/theme/muiThemeRegistry'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -20,9 +21,11 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='uk'>
-			<body className={`${geistSans.className} antialiased`}>
-				<ClientLayout>{children}</ClientLayout>
-			</body>
+			<MuiThemeRegistry>
+				<body className={`${geistSans.className} antialiased`}>
+					<ClientLayout>{children}</ClientLayout>
+				</body>
+			</MuiThemeRegistry>
 		</html>
 	)
 }
