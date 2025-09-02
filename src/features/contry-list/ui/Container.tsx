@@ -2,60 +2,16 @@
 
 import { CountrySearch } from './CountrySearch'
 import { SelectCountryList } from './SelectContryList'
-
 import { useCallback, useEffect, useState } from 'react'
 import { Typography } from '@mui/material'
 // import useDebounce from '@/shared/hooks/useDebounce'
-
 import { RegionFilter } from './RegionFilter'
-
-import { getCountries } from '../api/contryAPI'
+import { getCountries } from '@/entities/country/api/getCountries'
 import { useCountryList } from '../model/useCountryList'
-
 import { PopulationFilter } from './PopulationFilter'
 import { useQuery } from '@tanstack/react-query'
-import { REGIONS } from '@/entities/country/constants'
-import type { ISelectedRegion } from '@/entities/country/types'
-import { z } from 'zod'
-import { Container as MuiContainer } from '@mui/material'
-
-const CountrySchema = z.object({
-	area: z.number(),
-	borders: z.array(z.string()).optional(),
-	capital: z.array(z.string()).optional(),
-	currencies: z
-		.record(
-			z.string(),
-			z.object({
-				name: z.string(),
-				symbol: z.string().optional(),
-			})
-		)
-		.optional(),
-	flags: z.object({
-		png: z.string().url(),
-		svg: z.string().url(),
-		alt: z.string().optional(),
-	}),
-	languages: z.record(z.string(), z.string()).optional(),
-	name: z.object({
-		common: z.string(),
-		official: z.string(),
-		nativeName: z
-			.record(
-				z.string(),
-				z.object({
-					official: z.string(),
-					common: z.string(),
-				})
-			)
-			.optional(),
-	}),
-	population: z.number(),
-	region: z.string(),
-	subregion: z.string().optional(),
-})
-const CountriesSchema = z.array(CountrySchema)
+import { REGIONS } from '@/entities/country/modal/constants'
+import type { ISelectedRegion } from '@/entities/country/modal/types'
 
 export default function Container() {
 	const {
@@ -79,17 +35,6 @@ export default function Container() {
 	const { data, isLoading, error } = useQuery({
 		queryKey: ['countries'],
 		queryFn: getCountries,
-		select: rawData => {
-			const parsed = CountriesSchema.safeParse(rawData)
-
-			if (!parsed.success) {
-				console.error('Zod validation error:', parsed.error)
-				return null
-			}
-
-			return parsed.data
-		},
-		staleTime: 1000 * 60 * 60 * 24,
 	})
 
 	useEffect(() => {

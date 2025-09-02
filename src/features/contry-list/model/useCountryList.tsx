@@ -3,15 +3,15 @@ import {
 	filterByQuery,
 	filterByPopulation,
 	filterByRegions,
-} from '@/entities/country/utils'
-import type { Country } from '@/entities/country/types'
-import { REGIONS } from '@/entities/country/constants'
+} from '@/entities/country/modal/utils'
+import type { Country } from '@/entities/country/modal/types'
+import { REGIONS } from '@/entities/country/modal/constants'
 
 interface IInitialState {
 	countries: Country[] | null
 	originalCountries: Country[] | null
 	status: 'loading' | 'success' | { error: string } | null
-	test: Country[] | null
+
 	query: string
 	regions: { id: string; name: string }[]
 	population: { from: number; to: number }
@@ -25,7 +25,6 @@ const initialState: IInitialState = {
 	population: { from: 0, to: 100000000000 },
 
 	status: null,
-	test: null,
 }
 
 interface CountryActions {
