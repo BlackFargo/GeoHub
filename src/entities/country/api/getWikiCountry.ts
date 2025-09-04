@@ -1,16 +1,25 @@
 import { WikiCountrySchema } from '../modal/schemas'
+import axios from 'axios'
 
 export async function getWikiCountry(name: string) {
-	const res = await fetch(`/api/wiki?q=${name}`)
-	const rawData = await res.json()
+	try {
+		const res = await axios.get(`/api/wiki?q=${name}`)
+		const rawData = res.data
 
-	const parsed = WikiCountrySchema.safeParse(rawData)
+		const parsed = WikiCountrySchema.safeParse(rawData)
 
-	if (!parsed.success) {
-		console.error('Invalid data format', parsed.error)
-		throw new Error('Invalid country data')
+		if (!parsed.success) {
+			console.error('Invalid data format', parsed.error)
+			return null
+		}
+
+		return parsed.data
+	} catch (e: unknown) {
+		if (axios.isAxiosError(e)) {
+			console.error('Error fetching wiki data:', e.message)
+		} else {
+			console.error('Unexpected error:', e)
+		}
+		return null
 	}
-	console.log(parsed.data)
-
-	return parsed.data
 }

@@ -43,4 +43,5 @@ export const WikiCountrySchema = z.object({
 	extract: z.string(),
 	thumbnail: z.string().optional(),
 	fullurl: z.string().optional(),
+	countryInfo: CountrySchema,
 })

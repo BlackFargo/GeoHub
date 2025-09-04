@@ -1,21 +1,34 @@
 import { FlatCompat } from '@eslint/eslintrc'
+import { globalIgnores } from 'eslint/config'
 
 const compat = new FlatCompat({
-	// import.meta.dirname доступен после Node.js v20.11.0
-	baseDirectory: import.meta.dirname,
+	baseDirectory: import.meta.dir, // Node 20+
 })
 
-const eslintConfig = [
+export default [
+	// Игнорируем глобально папки сборки и node_modules
+	globalIgnores(['./dist/**', './build/**', './.next/**', './node_modules/**']),
+
+	// Подключаем старые конфиги через FlatCompat
 	...compat.config({
-		extends: ['next/core-web-vitals', 'next/typescript', 'prettier'],
+		extends: [
+			'plugin:@typescript-eslint/recommended',
+			'plugin:react/recommended',
+			'prettier',
+		],
 	}),
+
+	// Добавляем свои правила сверху
 	{
-		ignores: ['node_modules/**', '.next/**', 'dist/**', 'build/**'],
+		files: ['**/*.{ts,tsx,js,jsx}'],
 		rules: {
-			'@typescript-eslint/no-explicit-any': 'off', // 🚫 отключаем
+			'@typescript-eslint/no-explicit-any': 'off',
+			'@typescript-eslint/no-unused-vars': 'warn',
+			'react/react-in-jsx-scope': 'off',
 			'react-hooks/exhaustive-deps': 'off',
+		},
+		settings: {
+			react: { version: 'detect' },
 		},
 	},
 ]
-
-export default eslintConfig

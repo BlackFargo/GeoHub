@@ -1,5 +1,4 @@
 'use client'
-
 import React from 'react'
 import { VirtuosoGrid } from 'react-virtuoso'
 import { Box, Typography, List, ListItem } from '@mui/material'
@@ -9,11 +8,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 export function SelectCountryList({
 	countries,
+	isLoading,
 }: {
 	countries: Country[] | null
+	isLoading: boolean
 }) {
+	if (isLoading) return <h1>Loading...</h1>
 	if (!countries?.length) return <NotFoundBlock />
-
 	return (
 		<VirtuosoGrid
 			style={{ width: '100%' }}
@@ -21,7 +22,7 @@ export function SelectCountryList({
 			useWindowScroll
 			listClassName='grid-list'
 			components={{
-				Item: ({ children, ...props }) => (
+				Item: ({ children, ...props }: React.ComponentProps<typeof Box>) => (
 					<Box
 						{...props}
 						sx={{
@@ -41,7 +42,13 @@ export function SelectCountryList({
 						{children}
 					</Box>
 				),
-				List: React.forwardRef(function VirtuosoList({ style, children }, ref) {
+				List: React.forwardRef(function VirtuosoList(
+					{
+						style,
+						children,
+					}: { style?: React.CSSProperties; children?: React.ReactNode },
+					ref
+				) {
 					return (
 						<Box
 							ref={ref}
@@ -72,46 +79,42 @@ export function SelectCountryList({
 								objectFit: 'contain',
 								height: '100px',
 								width: '100%',
+								marginBottom: '20px',
 							}}
 							height={100}
 							width={160}
 							alt={country.name.common}
 						/>
-						{/* <Image
-							src={country.flags.png}
-							alt={country.name.common}
-							fill // заставляет Image занять весь родительский Box
-							style={{ objectFit: 'cover' }}
-						/> */}
+
 						<List sx={{ p: 0 }}>
 							<ListItem sx={{ p: 0 }}>
 								<Link href={`/country/${country.name.common}`}>
-									<Typography variant='h6'>{country.name.common}</Typography>
+									<Typography variant='h5'>{country.name.common}</Typography>
 								</Link>
 							</ListItem>
 							<ListItem sx={{ p: 0 }}>
 								<Typography variant='body2'>
-									Регіон: {country.region}
+									Region: {country.region}
 								</Typography>
 							</ListItem>
 							<ListItem sx={{ p: 0 }}>
 								<Typography variant='body2'>
-									Популяція: {country.population}
+									Population: {country.population}
 								</Typography>
 							</ListItem>
 							<ListItem sx={{ p: 0 }}>
 								<Typography variant='body2'>
-									Столиця: {country.capital}
+									Capital: {country.capital}
 								</Typography>
 							</ListItem>
 							<ListItem sx={{ p: 0 }}>
 								<Typography variant='body2'>
-									Мови: {Object.values(country.languages).join(', ')}
+									Languages: {Object.values(country.languages).join(', ')}
 								</Typography>
 							</ListItem>
 							<ListItem sx={{ p: 0 }}>
 								<Typography variant='body2'>
-									Область: {country.area} км²
+									Area: {country.area} km²
 								</Typography>
 							</ListItem>
 						</List>

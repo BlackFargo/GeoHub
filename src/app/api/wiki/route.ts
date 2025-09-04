@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
-
+import axios from 'axios'
 const schema = z.object({
 	q: z.string().min(2).max(100),
 })
@@ -18,26 +18,31 @@ export async function GET(req: Request) {
 		)
 	}
 	try {
-		const searchRes = await fetch(
+		const wikiSearch = await axios.get(
 			`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(
-				q
+				parsed.data.q
 			)}&format=json&origin=*`
 		)
-		const searchData = await searchRes.json()
+		const wikiData = wikiSearch.data
 
-		const firstResult = searchData?.query?.search?.[0]
+		const countryInfo = await axios.get(
+			`https://restcountries.com/v3.1/name/${parsed.data.q}?fields=name,capital,flags,population,region,subregion,languages,currencies,borders,area`
+		)
+		const country = countryInfo.data[0]
 
-		if (!firstResult) {
+		const firstWikiResult = wikiData?.query?.search?.[0]
+
+		if (!firstWikiResult) {
 			return NextResponse.json({ error: 'No results found' }, { status: 404 })
 		}
 
-		const pageId = firstResult.pageid
+		const pageId = firstWikiResult.pageid
 
 		// 2️⃣ Получаем краткий текст статьи, изображение и ссылку
-		const pageRes = await fetch(
+		const pageRes = await axios.get(
 			`https://en.wikipedia.org/w/api.php?action=query&pageids=${pageId}&prop=extracts|pageimages|info&exintro=true&explaintext=true&format=json&origin=*`
 		)
-		const pageData = await pageRes.json()
+		const pageData = pageRes.data
 
 		const page = pageData?.query?.pages?.[pageId]
 
@@ -50,9 +55,10 @@ export async function GET(req: Request) {
 
 		const wikiCountry = {
 			title: page.title,
-			extract: page.extract, // краткий текст статьи
-			thumbnail: page.thumbnail?.source || null, // изображение, если есть
+			extract: page.extract, // краткий текст статьиь
+			thumbnail: page.thumbnail?.source || null, // изображение, если ест
 			fullurl: page.fullurl, // ссылка на страницу
+			countryInfo: country,
 		}
 
 		return NextResponse.json(wikiCountry)

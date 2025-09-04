@@ -38,8 +38,9 @@ export default function Container() {
 	})
 
 	useEffect(() => {
-		if (data) {
+		if (data?.length) {
 			setCountries(data)
+			applyFilters()
 		}
 	}, [data])
 
@@ -81,7 +82,7 @@ export default function Container() {
 				handleChange={handleChange}
 			/>
 			<PopulationFilter setPopulation={setPopulationValues} />
-			<SelectCountryList countries={countries} />
+			<SelectCountryList countries={countries} isLoading={isLoading} />
 		</>
 	)
 }

@@ -8,6 +8,7 @@ export function CountrySearch({
 }) {
 	return (
 		<TextField
+			placeholder='Search country...'
 			variant='outlined'
 			fullWidth
 			onChange={searchCountry}
