@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import { Typography } from '@mui/material'
 import { getWikiCountry } from '@/entities/country/api/getWikiCountry'
 import CountryCard from './CountryCard'
+import Breadcrumbs from '@/features/breadCrumbs/BreadCrumbs'
 
 export function CountryInfo() {
 	const { name } = useParams<{ name: string }>()
@@ -36,6 +37,12 @@ export function CountryInfo() {
 
 			{data && (
 				<>
+					<Breadcrumbs
+						items={[
+							{ label: 'Home', href: `/` },
+							{ label: data.title, href: `/country/${data.title}` },
+						]}
+					/>
 					<Box
 						component='section'
 						sx={{
