@@ -10,17 +10,11 @@ const clientSideEmotionCache: EmotionCache = createCache({
 	prepend: true,
 })
 
-export default function MuiThemeRegistry({
-	children,
-}: {
-	children: React.ReactNode
-}) {
-	return (
-		<CacheProvider value={clientSideEmotionCache}>
-			<ThemeProvider theme={theme}>
-				<CssBaseline />
-				{children}
-			</ThemeProvider>
-		</CacheProvider>
-	)
-}
+export const MuiProvider = ({ children }: { children: React.ReactNode }) => (
+	<CacheProvider value={clientSideEmotionCache}>
+		<ThemeProvider theme={theme}>
+			<CssBaseline />
+			{children}
+		</ThemeProvider>
+	</CacheProvider>
+)

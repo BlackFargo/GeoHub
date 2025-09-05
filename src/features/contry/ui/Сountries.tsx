@@ -13,7 +13,7 @@ import { useQuery } from '@tanstack/react-query'
 import { REGIONS } from '@/entities/country/modal/constants'
 import type { ISelectedRegion } from '@/entities/country/modal/types'
 
-export default function Container() {
+export function CountriesContainer() {
 	const {
 		countries,
 		setQuery,

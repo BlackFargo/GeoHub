@@ -12,7 +12,7 @@
 		"prepare": "husky"
 	},
 	"lint-staged": {
-		"*.{ts,tsx,js,jsx}": "npm run lint:es"
+		"*.{ts,tsx,js,jsx}": "npm run lint:fix"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.14.0",

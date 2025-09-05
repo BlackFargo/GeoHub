@@ -11,7 +11,6 @@ interface IInitialState {
 	countries: Country[] | null
 	originalCountries: Country[] | null
 	status: 'loading' | 'success' | { error: string } | null
-
 	query: string
 	regions: { id: string; name: string }[]
 	population: { from: number; to: number }
@@ -23,7 +22,6 @@ const initialState: IInitialState = {
 	query: 'mol',
 	regions: REGIONS,
 	population: { from: 0, to: 100000000000 },
-
 	status: null,
 }
 
