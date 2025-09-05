@@ -3,7 +3,7 @@ import React from 'react'
 import { VirtuosoGrid } from 'react-virtuoso'
 import { Box, Typography, List, ListItem } from '@mui/material'
 import NotFoundBlock from './NotFoundBlock'
-import type { Country } from '@/entities/country/modal/types'
+import type { Country } from '../types'
 import Image from 'next/image'
 import Link from 'next/link'
 export function SelectCountryList({

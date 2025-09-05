@@ -8,6 +8,7 @@ export function CountrySearch({
 }) {
 	return (
 		<TextField
+			data-testid='country-search'
 			placeholder='Search country...'
 			variant='outlined'
 			fullWidth

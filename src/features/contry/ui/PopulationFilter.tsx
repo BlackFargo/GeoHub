@@ -12,8 +12,9 @@ export function PopulationFilter({ setPopulation }: PopulationFilterProps) {
 			</Typography>
 			<Box sx={{ display: 'flex', gap: 1 }}>
 				<Input
+					data-testid='population-from'
 					type='number'
-					placeholder='Від'
+					placeholder='From'
 					onChange={e =>
 						setPopulation({ from: Number(e.target.value) || 0, to: 10_000_000 })
 					}
@@ -21,8 +22,9 @@ export function PopulationFilter({ setPopulation }: PopulationFilterProps) {
 					sx={{ flex: 1 }}
 				/>
 				<Input
+					data-testid='population-to'
 					type='number'
-					placeholder='До'
+					placeholder='To'
 					onChange={e =>
 						setPopulation({ from: 0, to: Number(e.target.value) || 10_000_000 })
 					}
