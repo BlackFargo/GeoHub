@@ -22,7 +22,9 @@ export default function RootLayout({
 	return (
 		<html lang='uk'>
 			<MuiProvider>
-				<body className={`${geistSans.className} antialiased`}>
+				<body
+					className={`${geistSans.className} antialiased flex flex-col min-h-screen justify-between`}
+				>
 					<ClientLayout>{children}</ClientLayout>
 				</body>
 			</MuiProvider>

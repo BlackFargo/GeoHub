@@ -5,7 +5,7 @@ import { CountriesContainer } from '@/features/contry/ui/Сountries'
 export default function Home() {
 	return (
 		<>
-			<Container sx={{ pt: '200px' }} maxWidth={false}>
+			<Container sx={{ pt: '200px' }} maxWidth={false} component={'main'}>
 				<CountriesContainer />
 			</Container>
 		</>

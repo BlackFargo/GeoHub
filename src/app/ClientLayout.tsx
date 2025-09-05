@@ -6,6 +6,7 @@ import { Header } from '@/widgets/header/Header'
 import { auth } from '@/firebase/firebaseConfig'
 import useAuthStore from '@/features/auth/model/useAuthStore'
 import AppProviders from './providers/AppProviders'
+import Footer from '@/widgets/footer/Footer'
 
 export default function ClientLayout({
 	children,
@@ -26,6 +27,7 @@ export default function ClientLayout({
 		<AppProviders>
 			<Header />
 			{children}
+			<Footer />
 		</AppProviders>
 	)
 }
