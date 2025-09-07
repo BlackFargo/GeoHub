@@ -12,7 +12,7 @@ export default function Footer() {
 				textAlign: 'center',
 			})}
 		>
-			<p>© 2023 GeoHub. All rights reserved.</p>
+			<p>© 2025 GeoHub. All rights reserved.</p>
 		</Box>
 	)
 }

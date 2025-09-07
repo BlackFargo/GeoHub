@@ -1,11 +1,11 @@
 'use client'
 import React from 'react'
 import { VirtuosoGrid } from 'react-virtuoso'
-import { Box, Typography, List, ListItem } from '@mui/material'
+import { Box } from '@mui/material'
 import NotFoundBlock from './NotFoundBlock'
-import type { Country } from '../types'
-import Image from 'next/image'
-import Link from 'next/link'
+import type { Country } from '@/entities/country/modal/types'
+import CountryPreviewCard from '@/entities/country/ui/CountryPreviewCard'
+
 export function SelectCountryList({
 	countries,
 	isLoading,
@@ -25,6 +25,7 @@ export function SelectCountryList({
 				Item: ({ children, ...props }: React.ComponentProps<typeof Box>) => (
 					<Box
 						{...props}
+						component={'article'}
 						sx={{
 							border: '2px solid gray',
 							borderRadius: 2,
@@ -53,6 +54,7 @@ export function SelectCountryList({
 						<Box
 							ref={ref}
 							style={style}
+							component={'section'}
 							sx={{
 								display: 'grid',
 								gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
@@ -71,55 +73,7 @@ export function SelectCountryList({
 			}}
 			itemContent={index => {
 				const country = countries[index]
-				return (
-					<>
-						<Image
-							src={country.flags.png}
-							style={{
-								objectFit: 'contain',
-								height: '100px',
-								width: '100%',
-								marginBottom: '20px',
-							}}
-							height={100}
-							width={160}
-							alt={country.name.common}
-						/>
-
-						<List sx={{ p: 0 }}>
-							<ListItem sx={{ p: 0 }}>
-								<Link href={`/country/${country.name.common}`}>
-									<Typography variant='h5'>{country.name.common}</Typography>
-								</Link>
-							</ListItem>
-							<ListItem sx={{ p: 0 }}>
-								<Typography variant='body2'>
-									Region: {country.region}
-								</Typography>
-							</ListItem>
-							<ListItem sx={{ p: 0 }}>
-								<Typography variant='body2'>
-									Population: {country.population}
-								</Typography>
-							</ListItem>
-							<ListItem sx={{ p: 0 }}>
-								<Typography variant='body2'>
-									Capital: {country.capital}
-								</Typography>
-							</ListItem>
-							<ListItem sx={{ p: 0 }}>
-								<Typography variant='body2'>
-									Languages: {Object.values(country.languages).join(', ')}
-								</Typography>
-							</ListItem>
-							<ListItem sx={{ p: 0 }}>
-								<Typography variant='body2'>
-									Area: {country.area} km²
-								</Typography>
-							</ListItem>
-						</List>
-					</>
-				)
+				return <CountryPreviewCard country={country} />
 			}}
 		/>
 	)

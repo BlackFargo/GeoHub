@@ -1,10 +1,8 @@
-'use client'
 import { Card, CardContent, Typography, Box, Divider } from '@mui/material'
 
-export default function CountryCard({ data }: { data: any }) {
+export function CountryInfoCard({ data }: { data: any }) {
 	const {
 		name,
-
 		region,
 		subregion,
 		population,

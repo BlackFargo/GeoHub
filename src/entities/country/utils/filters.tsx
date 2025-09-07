@@ -1,4 +1,4 @@
-import { Country, ISelectedRegion } from './types'
+import { Country, ISelectedRegion } from '../modal/types'
 
 export const filterByQuery = (countries: Country[], query: string) =>
 	countries.filter(c =>

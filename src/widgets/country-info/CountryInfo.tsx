@@ -1,27 +1,22 @@
 'use client'
 import { CircularProgress, Container, Box } from '@mui/material'
-import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { Typography } from '@mui/material'
-import { getWikiCountry } from '@/entities/country/api/getWikiCountry'
-import CountryCard from './CountryCard'
+
+import { CountryInfoCard } from '@/entities/country/ui/CountryInfoCard'
 import Breadcrumbs from '@/features/breadCrumbs/BreadCrumbs'
+import { useCountryByName } from '@/entities/country/modal/hooks/useCountryByName'
 
 export function CountryInfo() {
 	const { name } = useParams<{ name: string }>()
 
-	const { data, isLoading, error } = useQuery({
-		queryKey: ['country', name],
-		queryFn: () => getWikiCountry(name),
-
-		staleTime: 1000 * 60 * 60 * 24,
-	})
+	const { data, isLoading, error } = useCountryByName(name)
 
 	if (error) return <div>Error loading country</div>
 
 	return (
 		<Container
-			sx={{ marginTop: '200px', position: 'relative' }}
+			sx={{ pt: '150px', pb: '50px', position: 'relative' }}
 			maxWidth={false}
 		>
 			{isLoading && (
@@ -84,7 +79,7 @@ export function CountryInfo() {
 							</a>
 						</Box>
 
-						<CountryCard data={data} />
+						<CountryInfoCard data={data} />
 					</Box>
 				</>
 			)}

@@ -3,7 +3,7 @@ import {
 	filterByQuery,
 	filterByPopulation,
 	filterByRegions,
-} from '@/entities/country/modal/utils'
+} from '@/entities/country/utils/filters'
 import type { Country } from '@/entities/country/modal/types'
 import { REGIONS } from '@/entities/country/modal/constants'
 
