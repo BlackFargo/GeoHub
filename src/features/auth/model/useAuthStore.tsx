@@ -13,9 +13,9 @@ interface IInitialState {
 }
 
 interface AuthActions {
-	registerUserWithEmail: (params: UserParams) => Promise<void>
+	registerUserWithEmail: (params: UserParams) => Promise<any>
 	setUser: (user: any) => void
-	loginUserWithEmailAndPassword: (params: UserParams) => Promise<void>
+	loginUserWithEmailAndPassword: (params: UserParams) => Promise<any>
 }
 
 const initialState: IInitialState = {
@@ -39,7 +39,7 @@ const useAuthStore = create<IInitialState & AuthActions>(set => ({
 				username,
 			})
 			set({ user, status: 'success' })
-			return
+			return user
 		} catch (error: unknown) {
 			const errorMessage =
 				error instanceof Error ? error.message : String(error)
@@ -60,7 +60,7 @@ const useAuthStore = create<IInitialState & AuthActions>(set => ({
 				username,
 			})
 			set({ user, status: 'success' })
-			return
+			return user
 		} catch (error: unknown) {
 			const errorMessage =
 				error instanceof Error ? error.message : String(error)

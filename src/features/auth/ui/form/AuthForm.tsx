@@ -6,13 +6,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { useState } from 'react'
 import useAuthStore from '../../model/useAuthStore'
+import { useRouter } from 'next/navigation'
 
 import {
 	registerUserWithGithub,
 	registerUserWithGoogle,
 } from '../../api/authApi'
-
-// import { useRouter } from 'next/navigation'
 
 const schema = z.object({
 	email: z
@@ -23,6 +22,7 @@ const schema = z.object({
 })
 type FormData = z.infer<typeof schema>
 export function AuthForm() {
+	const router = useRouter()
 	const {
 		registerUserWithEmail,
 		loginUserWithEmailAndPassword,
@@ -35,18 +35,24 @@ export function AuthForm() {
 		handleSubmit,
 	} = useForm<FormData>({ resolver: zodResolver(schema) })
 	const [authType, setAuthType] = useState<string>('')
-	// const router = useRouter()
+
+	const redirectIfUser = (res: UserCredential | undefined) => {
+		if (res?.email) router.push('/user')
+	}
+
 	const onSubmit = async (data: FormData) => {
 		if (authType === 'login') {
-			await loginUserWithEmailAndPassword({
+			const res = await loginUserWithEmailAndPassword({
 				email: data.email,
 				password: data.password,
 			})
+			redirectIfUser(res)
 		} else if (authType === 'register') {
-			await registerUserWithEmail({
+			const res = await registerUserWithEmail({
 				email: data.email,
 				password: data.password,
 			})
+			redirectIfUser(res)
 		}
 	}
 
@@ -98,7 +104,7 @@ export function AuthForm() {
 				type='submit'
 				onClick={() => setAuthType('login')}
 			>
-				Увійти
+				Login
 			</Button>
 
 			<p>

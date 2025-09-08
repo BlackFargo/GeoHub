@@ -14,7 +14,7 @@
 		"prepare": "husky"
 	},
 	"lint-staged": {
-		"*.{ts,tsx,js,jsx}": "npm run lint:fix"
+		"*.{ts,tsx,js,jsx}": "yarn lint:fix"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.14.0",
