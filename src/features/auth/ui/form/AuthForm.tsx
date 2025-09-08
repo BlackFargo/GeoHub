@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import useAuthStore from '../../model/useAuthStore'
 import { useRouter } from 'next/navigation'
+import { User } from 'firebase/auth'
 
 import {
 	registerUserWithGithub,
@@ -36,8 +37,8 @@ export function AuthForm() {
 	} = useForm<FormData>({ resolver: zodResolver(schema) })
 	const [authType, setAuthType] = useState<string>('')
 
-	const redirectIfUser = (res: UserCredential | undefined) => {
-		if (res?.email) router.push('/user')
+	const redirectIfUser = (res: User | void) => {
+		if (res?.email) router.push('/profile')
 	}
 
 	const onSubmit = async (data: FormData) => {
@@ -97,7 +98,7 @@ export function AuthForm() {
 				type='submit'
 				onClick={() => setAuthType('register')}
 			>
-				Зареєструватися
+				Sign up
 			</Button>
 			<Button
 				variant='outlined'
@@ -113,7 +114,7 @@ export function AuthForm() {
 			</p>
 
 			{status !== null && typeof status === 'object' && 'error' in status && (
-				<p>{status.error}</p>
+				<p>{status?.error}</p>
 			)}
 			<hr />
 			<Button

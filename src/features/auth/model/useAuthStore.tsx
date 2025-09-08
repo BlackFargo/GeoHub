@@ -1,21 +1,23 @@
 import { create } from 'zustand'
+import type { User } from 'firebase/auth'
+import type { UserParams } from '../types'
 import {
 	loginUserWithEmailAndPassword,
 	registerUserWithEmailAndPassword,
 } from '../api/authApi'
-import type { UserParams } from '../types'
+
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
 interface IInitialState {
-	user: any
+	user: User | null
 	status: Status | null
 	error?: string | null
 }
 
 interface AuthActions {
-	registerUserWithEmail: (params: UserParams) => Promise<any>
-	setUser: (user: any) => void
-	loginUserWithEmailAndPassword: (params: UserParams) => Promise<any>
+	registerUserWithEmail: (params: UserParams) => Promise<void>
+	loginUserWithEmailAndPassword: (params: UserParams) => Promise<void>
+	setUser: (user: User | null) => void
 }
 
 const initialState: IInitialState = {
@@ -26,12 +28,9 @@ const initialState: IInitialState = {
 
 const useAuthStore = create<IInitialState & AuthActions>(set => ({
 	...initialState,
-	setUser: user => {
-		set({ user, status: 'success' })
-	},
+	setUser: user => set({ user, status: 'success' }),
 	registerUserWithEmail: async ({ email, password, username }: UserParams) => {
-		set({ status: 'loading' })
-		set({ error: null })
+		set({ status: 'loading', error: null })
 		try {
 			const user = await registerUserWithEmailAndPassword({
 				email,
@@ -39,11 +38,11 @@ const useAuthStore = create<IInitialState & AuthActions>(set => ({
 				username,
 			})
 			set({ user, status: 'success' })
-			return user
 		} catch (error: unknown) {
-			const errorMessage =
-				error instanceof Error ? error.message : String(error)
-			set({ status: 'error', error: errorMessage })
+			set({
+				status: 'error',
+				error: error instanceof Error ? error.message : String(error),
+			})
 		}
 	},
 	loginUserWithEmailAndPassword: async ({
@@ -51,8 +50,7 @@ const useAuthStore = create<IInitialState & AuthActions>(set => ({
 		password,
 		username,
 	}: UserParams) => {
-		set({ status: 'loading' })
-		set({ error: null })
+		set({ status: 'loading', error: null })
 		try {
 			const user = await loginUserWithEmailAndPassword({
 				email,
@@ -60,11 +58,11 @@ const useAuthStore = create<IInitialState & AuthActions>(set => ({
 				username,
 			})
 			set({ user, status: 'success' })
-			return user
 		} catch (error: unknown) {
-			const errorMessage =
-				error instanceof Error ? error.message : String(error)
-			set({ status: 'error', error: errorMessage })
+			set({
+				status: 'error',
+				error: error instanceof Error ? error.message : String(error),
+			})
 		}
 	},
 }))
