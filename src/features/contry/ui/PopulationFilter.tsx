@@ -8,7 +8,7 @@ export function PopulationFilter({ setPopulation }: PopulationFilterProps) {
 	return (
 		<Box sx={{ mb: 2 }}>
 			<Typography variant='h6' component='h2' sx={{ mb: 1 }}>
-				Фільтр за населенням
+				Filter by population
 			</Typography>
 			<Box sx={{ display: 'flex', gap: 1 }}>
 				<Input
@@ -16,7 +16,10 @@ export function PopulationFilter({ setPopulation }: PopulationFilterProps) {
 					type='number'
 					placeholder='From'
 					onChange={e =>
-						setPopulation({ from: Number(e.target.value) || 0, to: 10_000_000 })
+						setPopulation({
+							from: Number(e.target.value) || 0,
+							to: 10_000_000_000,
+						})
 					}
 					inputProps={{ min: 0 }}
 					sx={{ flex: 1 }}
@@ -26,7 +29,10 @@ export function PopulationFilter({ setPopulation }: PopulationFilterProps) {
 					type='number'
 					placeholder='To'
 					onChange={e =>
-						setPopulation({ from: 0, to: Number(e.target.value) || 10_000_000 })
+						setPopulation({
+							from: 0,
+							to: Number(e.target.value) || 10_000_000_000,
+						})
 					}
 					inputProps={{ min: 0 }}
 					sx={{ flex: 1 }}

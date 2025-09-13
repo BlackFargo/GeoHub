@@ -12,7 +12,7 @@ export function CountrySearch({
 			placeholder='Search country...'
 			variant='outlined'
 			fullWidth
-			onChange={searchCountry}
+			onChange={e => searchCountry(e)}
 			InputProps={{
 				startAdornment: (
 					<InputAdornment position='start'>

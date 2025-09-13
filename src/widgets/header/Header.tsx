@@ -6,8 +6,9 @@ import Brightness4Icon from '@mui/icons-material/Brightness4'
 import IconButton from '@mui/material/IconButton'
 
 import Link from 'next/link'
+import { User } from 'firebase/auth'
 
-export function Header() {
+export function Header({ user }: { user: User | null }) {
 	return (
 		<AppBar position='fixed'>
 			<Toolbar>
@@ -26,16 +27,27 @@ export function Header() {
 				>
 					<Brightness4Icon />
 				</IconButton>
-
-				<Button
-					color='inherit'
-					startIcon={<AccountCircle />}
-					component={Link}
-					href='/auth'
-				>
-					Увійти
-				</Button>
-
+				{user ? (
+					<Button
+						color='inherit'
+						component={Link}
+						href='/profile'
+						startIcon={<AccountCircle />}
+						aria-label='Профіль користувача'
+						sx={{ textTransform: 'none', fontWeight: 'bold', fontSize: '16px' }}
+					>
+						{user.displayName}
+					</Button>
+				) : (
+					<Button
+						color='inherit'
+						startIcon={<AccountCircle />}
+						component={Link}
+						href='/auth'
+					>
+						Увійти
+					</Button>
+				)}
 				{/* <IconButton color='inherit'>
 					<SettingsIcon />
 				</IconButton>

@@ -5,8 +5,8 @@ export default function UserInfo({
 	nickname,
 	email,
 }: {
-	nickname: string
-	email: string
+	nickname: string | null | undefined
+	email: string | null | undefined
 }) {
 	return (
 		<Box component={'section'} aria-label='User information'>

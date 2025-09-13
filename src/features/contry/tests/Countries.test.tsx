@@ -29,7 +29,7 @@ describe('CountriesContainer', () => {
 
 	it('renders title', () => {
 		render(<CountriesContainer />)
-		expect(screen.getByText(/Пошук інформації про країни/i)).toBeInTheDocument()
+		expect(screen.getByText(/Search for a country/i)).toBeInTheDocument()
 	})
 
 	it('renders country search input', () => {

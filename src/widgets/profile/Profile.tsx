@@ -1,14 +1,17 @@
+'use client'
 import UserAvatar from '@/entities/user/userAvatar/UserAvatar'
 import UserInfo from '@/entities/user/userInfo/UserInfo'
+import useAuthStore from '@/features/auth/model/useAuthStore'
 import { Container, Typography, Box } from '@mui/material'
 
 export default function Profile() {
+	const { user } = useAuthStore()
 	return (
 		<Container maxWidth='lg' sx={{ mt: 20 }}>
 			<Box>
-				<UserAvatar />
+				<UserAvatar src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTfWzNRwbPV73suJ1TbZgZgE3HIzVGH3SG2w&s' />
 
-				<UserInfo nickname='John Doe' email='john.doe@example.com' />
+				<UserInfo nickname={user?.displayName} email={user?.email} />
 			</Box>
 			<Box>
 				<Typography variant='h4' component={'h2'}>

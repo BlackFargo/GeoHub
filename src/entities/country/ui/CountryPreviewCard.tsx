@@ -1,10 +1,18 @@
 import React from 'react'
-import { Typography, List, ListItem } from '@mui/material'
+import { Typography, List, ListItem, Button, Box } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Country } from '../modal/types'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp'
+import ThumbDownIcon from '@mui/icons-material/ThumbDown'
 
-export default function CountryPreviewCard({ country }: { country: Country }) {
+export default function CountryPreviewCard({
+	country,
+	likeCountry,
+}: {
+	country: Country
+	likeCountry: (countryName: string) => void
+}) {
 	return (
 		<>
 			<Image
@@ -65,6 +73,21 @@ export default function CountryPreviewCard({ country }: { country: Country }) {
 					)}
 				</ListItem>
 			</List>
+			<Box sx={{ display: 'flex', gap: 1, mt: 2, flexDirection: 'column' }}>
+				<Button
+					variant='contained'
+					fullWidth
+					component={'button'}
+					sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}
+					onClick={() => likeCountry(country.name.official)}
+				>
+					<ThumbUpIcon />
+					<Typography variant='body1'>110</Typography>
+				</Button>
+				<Button variant='contained' fullWidth component={'button'}>
+					<ThumbDownIcon />
+				</Button>
+			</Box>
 		</>
 	)
 }

@@ -9,9 +9,11 @@ import CountryPreviewCard from '@/entities/country/ui/CountryPreviewCard'
 export function SelectCountryList({
 	countries,
 	isLoading,
+	likeCountry,
 }: {
 	countries: Country[] | null
 	isLoading: boolean
+	likeCountry: (name: string) => void
 }) {
 	if (isLoading) return <h1>Loading...</h1>
 	if (!countries?.length) return <NotFoundBlock />
@@ -34,9 +36,9 @@ export function SelectCountryList({
 							width: '100%',
 							maxWidth: '300px',
 							height: {
-								xs: 310,
-								sm: 330,
-								md: 360,
+								xs: 350,
+								sm: 380,
+								md: 420,
 							},
 						}}
 					>
@@ -73,7 +75,9 @@ export function SelectCountryList({
 			}}
 			itemContent={index => {
 				const country = countries[index]
-				return <CountryPreviewCard country={country} />
+				return (
+					<CountryPreviewCard country={country} likeCountry={likeCountry} />
+				)
 			}}
 		/>
 	)

@@ -23,11 +23,11 @@ const NotFoundBlock = () => {
 			/>
 
 			<Typography variant='h4' fontWeight={500} gutterBottom>
-				Країна не знайдена
+				Country not found
 			</Typography>
 
 			<Typography variant='body1' color='text.secondary'>
-				Спробуйте змінити запит або перевірити правильність написання.
+				Try changing the query or checking the spelling.
 			</Typography>
 		</Box>
 	)
