@@ -61,10 +61,9 @@ export function SelectCountryList({
 								display: 'grid',
 								gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
 
-								justifyItems: 'center',
-								// '@media (max-width:550px)': {
-								// 	justifyItems: 'center',
-								// },
+								'@media (max-width:550px)': {
+									justifyItems: 'center',
+								},
 								gap: 2,
 							}}
 						>

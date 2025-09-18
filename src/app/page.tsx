@@ -1,6 +1,6 @@
 import { Container } from '@mui/material'
 
-import { CountriesContainer } from '@/features/contry/ui/Сountries'
+import MainCountries from '@/widgets/countries/main/MainCountries'
 
 export default function Home() {
 	return (
@@ -10,7 +10,7 @@ export default function Home() {
 				maxWidth={false}
 				component={'main'}
 			>
-				<CountriesContainer />
+				<MainCountries />
 			</Container>
 		</>
 	)

@@ -62,7 +62,7 @@ export const useCountryList = create<IInitialState & CountryActions>(
 		},
 		applyFilters() {
 			const origCountries = get()?.originalCountries
-
+			console.log(origCountries)
 			const { query, regions, population } = get()
 
 			if (!origCountries?.length) return

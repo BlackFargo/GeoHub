@@ -18,7 +18,7 @@ import { likeCountry } from '@/entities/country/api/likeCountry'
 // 	false: { message: 'Error fetching countries', isLoading: false },
 // }
 
-export function CountriesContainer() {
+export function CountriesContainer({ type }: { type: 'main' | 'like' }) {
 	const {
 		regions,
 		query,
@@ -28,6 +28,7 @@ export function CountriesContainer() {
 		setCountries,
 		setPopulation,
 
+		likedCountries,
 		setRegions,
 		applyFilters,
 	} = useCountryList()
@@ -44,7 +45,6 @@ export function CountriesContainer() {
 	const debouncedPopulation = useDebounce(localPopulation, 200)
 
 	useEffect(() => {
-		console.log(debouncedQuery)
 		setQuery(debouncedQuery)
 	}, [debouncedQuery])
 
@@ -69,11 +69,15 @@ export function CountriesContainer() {
 	}
 
 	useEffect(() => {
-		if (data?.length) {
-			setCountries(data)
-			applyFilters()
+		if (type === 'main') {
+			if (data?.length) {
+				setCountries(data)
+				applyFilters()
+			}
+		} else {
+			setCountries(likedCountries)
 		}
-	}, [data])
+	}, [data, likedCountries])
 
 	useEffect(() => {
 		applyFilters()

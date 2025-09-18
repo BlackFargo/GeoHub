@@ -3,23 +3,22 @@ import {
 	updateDoc,
 	doc,
 	arrayUnion,
-	setDoc,
 	addDoc,
 	collection,
 } from 'firebase/firestore'
 
 import { handleFirebaseError } from '@/shared/utils/handleFirebaseError'
 
-export async function likeCountry(name: string) {
+export async function likeCountry(country: string) {
 	try {
 		const docRef = doc(db, 'likedCountries', 'DDi2AbyqIsEDKpTCu2wT')
 		if (docRef) {
 			await updateDoc(docRef, {
-				countries: arrayUnion(name),
+				countries: arrayUnion(country),
 			})
 		} else {
 			await addDoc(collection(db, 'likedCountries'), {
-				countries: [name],
+				countries: [{ country }],
 			})
 		}
 	} catch (error: unknown) {

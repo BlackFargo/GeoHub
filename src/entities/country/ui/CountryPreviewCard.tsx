@@ -79,7 +79,7 @@ export default function CountryPreviewCard({
 					fullWidth
 					component={'button'}
 					sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}
-					onClick={() => likeCountry(country.name.official)}
+					onClick={() => likeCountry(country)}
 				>
 					<ThumbUpIcon />
 					<Typography variant='body1'>110</Typography>

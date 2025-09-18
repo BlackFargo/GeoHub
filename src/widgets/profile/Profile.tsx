@@ -2,7 +2,9 @@
 import UserAvatar from '@/entities/user/userAvatar/UserAvatar'
 import UserInfo from '@/entities/user/userInfo/UserInfo'
 import useAuthStore from '@/features/auth/model/useAuthStore'
+
 import { Container, Typography, Box } from '@mui/material'
+import { LikedCountries } from '../countries/liked/LikedCountries'
 
 export default function Profile() {
 	const { user } = useAuthStore()
@@ -15,8 +17,9 @@ export default function Profile() {
 			</Box>
 			<Box>
 				<Typography variant='h4' component={'h2'}>
-					Saved countries
+					Liked Countries
 				</Typography>
+				<LikedCountries />
 			</Box>
 		</Container>
 	)
